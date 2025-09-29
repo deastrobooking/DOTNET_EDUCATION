@@ -1,0 +1,75 @@
+# ASP.NET / Visual Studio gitignore
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+bin/
+obj/
+[Bb]uild/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+
+# NuGet
+*.nupkg
+*.snupkg
+# The packages folder can be ignored because of Package Restore
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+# except build/, which is used as an MSBuild target.
+
+# Visual Studio cache/options directory
+.vs/
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+
+# IIS Express
+/.vs/config/applicationhost.config
+
+# Logs
+*.log
+
+# Database
+App_Data/*.mdf
+App_Data/*.ldf
+
+# Publish
+publish/
+[Tt]est[Rr]esults/
+
+# Other
+_ReSharper*/
+*.resharper
+*.DotSettings.user
+*.orig
+
+# Node (if any frontend assets)
+node_modules/
+
+# Environment
+.env
+
+# Temporary
+*.tmp
+*.bak
+*.swp
+
+# Exclude local settings
+appsettings.*.json
+
+# JetBrains Rider
+.idea/
+
+# macOS
+.DS_Store
