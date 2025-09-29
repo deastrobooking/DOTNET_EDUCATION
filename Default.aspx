@@ -4,19 +4,48 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>Homework 3 - Building Dynamic, Intelligent Web-based Solutions</title>
+    <title>Hocus Pocus Set the Focus</title>
     <style>
         .container { margin: 20px; }
         .section { margin: 15px 0; border: 1px solid #ccc; padding: 10px; }
         .error { color: red; font-weight: bold; }
         .success { color: green; font-weight: bold; }
         .hidden { display: none; }
+        .welcome-banner { 
+            background-color: #f0f8ff; 
+            padding: 15px; 
+            border: 2px solid #4CAF50; 
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .reset-section {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #ffe4e1;
+            border: 1px solid #ff6b6b;
+        }
     </style>
 </head>
 <body>
     <form id="form1" runat="server">
     <div class="container">
-        <h2>ITWP 2300 Homework 3 - Building Dynamic, Intelligent Web-based Solutions</h2>
+        
+        <!-- Welcome Banner -->
+        <div class="welcome-banner">
+            <asp:Label ID="lblWelcomeBanner" runat="server" Text="Welcome to the University Database Management System!" />
+        </div>
+        
+        <!-- Reset Cookie Section -->
+        <div class="reset-section">
+            <asp:Button ID="btnReset" runat="server" Text="Reset Login" BackColor="#ff6b6b" ForeColor="White" />
+            <br />
+            <small>Click to logout and return to login page</small>
+        </div>
+        
+        <h2>ITWP 2300 Homework 4 - Data Validation, Cookies, and Page Redirection</h2>
         
         <!-- Error/Success Message Display -->
         <asp:Label ID="lblErrorMessage" runat="server" CssClass="error" EnableViewState="false" Text="" />

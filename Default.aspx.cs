@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Drawing;
@@ -10,6 +11,40 @@ public partial class _Default : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        // Check for user authentication cookie - redirect to login if not found
+        HttpCookie cookie = Request.Cookies["userInfo"];
+        if (cookie == null)
+        {
+            Response.Redirect("LogIn.aspx");
+            return;
+        }
+
+        // Handle reset button click (logout functionality)
+        if (IsPostBack)
+        {
+            // Expire the cookie and redirect to login
+            cookie.Expires = DateTime.Now.AddDays(-1);
+            Response.Cookies.Add(cookie);
+            Response.Redirect("LogIn.aspx");
+            return;
+        }
+
+        // Display welcome message with user information
+        if (cookie != null)
+        {
+            // Bonus: Parse cookie values and display user email
+            // Response.Write(cookie.Value + "<br />"); // For debugging
+            string[] rawInput = cookie.Value.Split('&');
+            if (rawInput.Length > 0)
+            {
+                string[] eMail = rawInput[0].Split('=');
+                if (eMail.Length > 1)
+                {
+                    lblWelcomeBanner.Text = "Welcome! If " + eMail[1] + " is not your email address, please click on Reset";
+                }
+            }
+        }
+
         if (!IsPostBack)
         {
             string filePath = Server.MapPath("~/App_Data");
