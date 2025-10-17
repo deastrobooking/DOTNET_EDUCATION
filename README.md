@@ -1,219 +1,307 @@
-# HW4 - ASP.NET Web Forms University Database Management System
+Here’s the extracted code (ready to paste) plus a super-quick build guide for the Ashland Soccer homework. Source: 
 
-A comprehensive university database management system built with ASP.NET Web Forms, featuring user authentication and CRUD operations for managing students, courses, faculty, and other academic data.
+# Quick build guide (ASP.NET Web Forms)
 
-## 🏗️ Project Structure
+1. **Create project & page**
 
-```
-HW4/
-├── Default.aspx              # Main application page with database operations
-├── Default.aspx.cs           # Code-behind for main page
-├── LogIn.aspx               # User authentication page
-├── LogIn.aspx.cs            # Authentication logic
-├── Web.config               # ASP.NET configuration
-├── HW4.slnx                 # Solution file
-├── start-server.ps1         # PowerShell script to start development server
-├── App_Code/
-│   └── myDatabaseConnection.cs  # Database connection and operations
-├── App_Data/                # Data files for the application
-│   ├── course.dat
-│   ├── student.dat
-│   ├── faculty.dat
-│   ├── major.dat
-│   ├── section.dat
-│   ├── enrollment.dat
-│   └── grade.dat
-└── .vscode/                 # VS Code configuration
-    ├── tasks.json           # Build and run tasks
-    └── launch.json          # Debug configuration
-```
+* Project: `ashlandSoccer`
+* Add folder: `App_Code`
+* Add page: `Default.aspx` (Title: “Ashland Soccer”)
+* Add controls to `Default.aspx`:
 
-## 🚀 Quick Start
+  * `Label` → `ID="lblErrorMessage"` (Text empty, `BorderStyle=None`)
+  * `GridView` → `ID="gvDisplay"`
+  * (for Part 2) `DropDownList` x3 → `ddField`, `ddTeam`, `ddStatus` (set `AutoPostBack="true"`)
+  * (debug only) `ListBox` x3 → `lbField`, `lbTeam`, `lbStatus` (make `Visible="false"` before turning in)
+  * (optional) `Button` → `btnSubmit` (you can remove once AutoPostBack is on)
 
-### Prerequisites
+2. **Bring in DB helper**
 
-- **Visual Studio Code** with C# extension installed
-- **IIS Express** (usually installed with Visual Studio)
-- **.NET Framework** (target framework defined in Web.config)
-- **Windows** operating system
+* Copy `myDatabaseConnection.cs` from your Homework 2/3 into `App_Code`. 
 
-### Setup Instructions
+3. **Wire up Default.aspx.cs**
+   Add namespaces:
 
-1. **Clone or download** this repository
-2. **Open the project** in VS Code:
-   ```powershell
-   cd "C:\Users\deast\Desktop\ITWP2300\HW4"
-   code .
-   ```
-
-3. **Start the development server** using any of these methods:
-
-#### Method 1: Using VS Code Tasks (Recommended)
-- Press `Ctrl+Shift+P` → Type "Tasks: Run Task" → Select "Start IIS Express Server"
-- Or press `Ctrl+Shift+P` → Type "Tasks: Run Build Task" → Select "iisexpress"
-
-#### Method 2: Using PowerShell Script
-```powershell
-.\start-server.ps1
-```
-
-#### Method 3: Manual IIS Express Command
-```powershell
-& "C:\Program Files\IIS Express\iisexpress.exe" /path:"C:\Users\deast\Desktop\ITWP2300\HW4" /port:52061
-```
-
-4. **Open your browser** and navigate to:
-   ```
-   http://localhost:52061/LogIn.aspx
-   ```
-
-## 🛠️ Development Setup for VS Code
-
-### Installing Required Extensions
-
-1. **C# Extension** (Microsoft):
-   ```
-   ext install ms-dotnettools.csharp
-   ```
-
-2. **Optional but helpful extensions**:
-   - ASP.NET Core Snippets
-   - C# XML Documentation Comments
-   - Auto Rename Tag
-   - Bracket Pair Colorizer
-
-### VS Code Configuration Files
-
-The project includes pre-configured VS Code settings:
-
-#### `.vscode/tasks.json`
-Contains tasks for:
-- **IIS Express Server**: Background task to run the development server
-- **Build Task**: MSBuild compilation task
-- **Stop Server**: Task to terminate the development server
-
-#### `.vscode/launch.json`
-Provides debugging configuration:
-- **Launch with IIS Express**: Automatically starts server and opens browser
-- **Attach to Process**: For debugging running applications
-
-### Key VS Code Commands
-
-| Action | Command | Shortcut |
-|--------|---------|----------|
-| Start Server | Tasks: Run Task → "Start IIS Express Server" | `Ctrl+Shift+P` |
-| Build Project | Tasks: Run Build Task | `Ctrl+Shift+B` |
-| Start Debugging | Debug: Start Debugging | `F5` |
-| Open Command Palette | View: Show Command Palette | `Ctrl+Shift+P` |
-
-## 🔧 Build Process
-
-### Automatic Build Configuration
-
-The project uses MSBuild for compilation with the following configuration:
-
-1. **Solution File**: `HW4.slnx` defines the project structure
-2. **Web.config**: Contains compilation and runtime settings
-3. **Build Task**: Configured in `tasks.json` to use MSBuild with proper parameters
-
-### Manual Build Steps
-
-If you need to build manually:
-
-```powershell
-# Build the solution
-msbuild HW4.slnx /property:GenerateFullPaths=true /consoleloggerparameters:NoSummary
-
-# Or use the VS Code task
-# Ctrl+Shift+P → Tasks: Run Build Task
-```
-
-### Development Workflow
-
-1. **Code Changes**: Edit .aspx, .aspx.cs, or .cs files
-2. **Auto-Build**: IIS Express automatically recompiles on file changes
-3. **Browser Refresh**: Refresh browser to see changes
-4. **Debugging**: Use F5 to start with debugging, or attach to running process
-
-## 📖 Application Features
-
-### Authentication System
-- **Login Page**: Email and Date of Birth validation
-- **Cookie Management**: 30-day authentication cookies
-- **Security**: Matching email/DOB confirmation required
-
-### Database Operations
-- **CRUD Operations**: Create, Read, Update, Delete for all entities
-- **Entity Management**: Students, Courses, Faculty, Majors, Sections, Enrollments, Grades
-- **Data Import**: Load data from .dat files in App_Data folder
-- **SQL Server Integration**: Remote database connection support
-
-### User Interface
-- **Responsive Design**: Clean, functional web forms
-- **Error Handling**: User-friendly error messages
-- **Navigation**: Intuitive workflow between operations
-
-## 🗃️ Database Configuration
-
-### Connection String
-Located in `App_Code/myDatabaseConnection.cs`:
 ```csharp
-Server: SQL5025.myWindowsHosting.com
-Database: chabotr564_HW4
-User Prefix: chabotr564_
+using System;
+using System.Web.UI.WebControls;
 ```
 
-### Data Files Format
-All .dat files in App_Data use pipe-delimited format (|) for easy parsing.
+Page_Load (Part 1 baseline “show SCHEDULE”):
 
-## 🐛 Troubleshooting
+```csharp
+protected void Page_Load(object sender, EventArgs e)
+{
+    lblErrorMessage.Text = "";
+    string sqlStatement;
 
-### Common Issues and Solutions
+    if (!IsPostBack)
+    {
+        // (Filled in Part 2)
+    }
 
-**Server Won't Start**
-- Verify IIS Express is installed: `Test-Path "C:\Program Files\IIS Express\iisexpress.exe"`
-- Check if port 52061 is available: `netstat -an | findstr :52061`
-- Run PowerShell as Administrator if needed
+    // Start simple (Part 1)
+    // sqlStatement = "SELECT * from schedule";
+    // myDatabaseConnection.executeSQL(sqlStatement, ref gvDisplay, ref lblErrorMessage);
 
-**C# Extension Not Working**
-- Reload VS Code: `Ctrl+Shift+P` → "Developer: Reload Window"
-- Check OmniSharp output: `View` → `Output` → Select "OmniSharp Log"
-- Restart OmniSharp: `Ctrl+Shift+P` → "OmniSharp: Restart OmniSharp"
+    // Progression of SELECTs (uncomment one at a time while learning)
+    // sqlStatement = "SELECT Week, Time_Slot, Field, Home, Visitor, Status from SCHEDULE ORDER BY SCHEDULE.WEEK";
+    // sqlStatement = "SELECT DATES.PLAY_DATE, Time_Slot, Field, Home, Visitor, Status from SCHEDULE, DATES WHERE DATES.WEEK = SCHEDULE.WEEK ORDER BY SCHEDULE.WEEK";
+    // sqlStatement = "SELECT DATES.PLAY_DATE, GameTime.Game_Time, Field, Home, Visitor, Status from SCHEDULE, DATES, GameTime WHERE DATES.WEEK = SCHEDULE.WEEK AND GameTime.TIME_SLOT = SCHEDULE.TIME_SLOT ORDER BY SCHEDULE.WEEK";
+    // sqlStatement = "SELECT DATES.PLAY_DATE, GAMETIME.GAME_TIME, FIELDS.FIELD_NAME, Home, Visitor, Status from SCHEDULE, DATES, GAMETIME, FIELDS WHERE DATES.WEEK = SCHEDULE.WEEK AND GAMETIME.TIME_SLOT = SCHEDULE.TIME_SLOT AND FIELDS.FIELD = SCHEDULE.FIELD ORDER BY SCHEDULE.WEEK";
+    // sqlStatement = "SELECT DATES.PLAY_DATE, GAMETIME.GAME_TIME, FIELDS.FIELD_NAME, Home, Visitor, STATUS.FULL_STATUS from SCHEDULE, DATES, GAMETIME, FIELDS, STATUS WHERE DATES.WEEK = SCHEDULE.WEEK AND GAMETIME.TIME_SLOT = SCHEDULE.TIME_SLOT AND FIELDS.FIELD = SCHEDULE.FIELD AND STATUS.STATUS = SCHEDULE.STATUS";
+    // sqlStatement = "SELECT DATES.PLAY_DATE, GAMETIME.GAME_TIME, FIELDS.FIELD_NAME, TEAMNAME.TEAM_NAME, Visitor, STATUS.FULL_STATUS from SCHEDULE, DATES, GAMETIME, FIELDS, STATUS, TEAMNAME WHERE DATES.WEEK = SCHEDULE.WEEK AND GAMETIME.TIME_SLOT = SCHEDULE.TIME_SLOT AND FIELDS.FIELD = SCHEDULE.FIELD AND STATUS.STATUS = SCHEDULE.STATUS AND TEAMNAME.TEAM_NO = SCHEDULE.HOME ORDER BY SCHEDULE.WEEK";
+    // sqlStatement = "SELECT DATES.PLAY_DATE, GAMETIME.GAME_TIME, FIELDS.FIELD_NAME, TEAMNAME.TEAM_NAME, TEAMS_1.TEAM_NAME, STATUS.FULL_STATUS from SCHEDULE, DATES, GAMETIME, FIELDS, STATUS, TEAMNAME, TEAMNAME AS TEAMS_1 WHERE DATES.WEEK = SCHEDULE.WEEK AND GAMETIME.TIME_SLOT = SCHEDULE.TIME_SLOT AND FIELDS.FIELD = SCHEDULE.FIELD AND STATUS.STATUS = SCHEDULE.STATUS AND TEAMNAME.TEAM_NO = SCHEDULE.HOME AND TEAMS_1.TEAM_NO = SCHEDULE.VISITOR ORDER BY SCHEDULE.WEEK";
 
-**Build Errors**
-- Ensure .NET Framework is installed
-- Check Web.config for correct compilation settings
-- Verify all references are available
+    // Clean, multi-line final SELECT (Part 1 end-state)
+    sqlStatement  = "SELECT DATES.PLAY_DATE, GAMETIME.GAME_TIME, FIELDS.FIELD_NAME,";
+    sqlStatement += " TEAMNAME.TEAM_NAME, TEAMS_1.TEAM_NAME, STATUS.FULL_STATUS";
+    sqlStatement += " from SCHEDULE, DATES, GAMETIME, FIELDS, STATUS, TEAMNAME, TEAMNAME AS TEAMS_1";
+    sqlStatement += " WHERE DATES.WEEK = SCHEDULE.WEEK";
+    sqlStatement += " AND GAMETIME.TIME_SLOT = SCHEDULE.TIME_SLOT";
+    sqlStatement += " AND FIELDS.FIELD = SCHEDULE.FIELD";
+    sqlStatement += " AND STATUS.STATUS = SCHEDULE.STATUS";
+    sqlStatement += " AND TEAMNAME.TEAM_NO = SCHEDULE.HOME";
+    sqlStatement += " AND TEAMS_1.TEAM_NO = SCHEDULE.VISITOR";
+    sqlStatement += " ORDER BY SCHEDULE.WEEK";
 
-**Authentication Issues**
-- Clear browser cookies for localhost
-- Check date format (MM/DD/YYYY required)
-- Verify App_Data folder permissions
+    myDatabaseConnection.executeSQL(sqlStatement, ref gvDisplay, ref lblErrorMessage);
+}
+```
 
-### Debug Mode
+(Progression and final query pulled directly from the assignment.) 
 
-To run in debug mode:
-1. Press `F5` or use "Debug: Start Debugging"
-2. Set breakpoints in .cs files
-3. Step through code execution
-4. Inspect variables and call stack
+4. **Part 2: Dynamic dropdowns (DDD)**
 
-## 📚 Additional Resources
+Add these calls inside `Page_Load` under `if (!IsPostBack)` to populate menus:
 
-### ASP.NET Web Forms Documentation
-- [Microsoft ASP.NET Web Forms Guide](https://docs.microsoft.com/en-us/aspnet/web-forms/)
-- [IIS Express Documentation](https://docs.microsoft.com/en-us/iis/extensions/introduction-to-iis-express/)
+```csharp
+if (!IsPostBack)
+{
+    myDatabaseConnection.fillDropDownList(ddTeam,  lbTeam,  "TEAMNAME", "TEAM_NAME",   "TEAM_NO", ref lblErrorMessage);
+    myDatabaseConnection.fillDropDownList(ddField,  lbField, "FIELDS",   "FIELD_NAME",  "FIELD",    ref lblErrorMessage);
+    myDatabaseConnection.fillDropDownList(ddStatus, lbStatus,"STATUS",   "FULL_STATUS", "STATUS",   ref lblErrorMessage);
+}
+```
 
-### VS Code for .NET Development
-- [VS Code C# Extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
-- [Debugging .NET with VS Code](https://code.visualstudio.com/docs/languages/csharp)
+
+
+**Handler to rebuild query on change**
+(If you keep a Submit button, put this in `btnSubmit_Click`; otherwise rely on AutoPostBack of the three DDLs and reuse this body from their `SelectedIndexChanged` events.)
+
+```csharp
+protected void RequeryAndBind()
+{
+    lblErrorMessage.Text = "";
+    string sqlStatement = "";
+    sqlStatement  = "SELECT DATES.PLAY_DATE, GAMETIME.GAME_TIME, FIELDS.FIELD_NAME,";
+    sqlStatement += " TEAMNAME.TEAM_NAME, TEAMS_1.TEAM_NAME, STATUS.FULL_STATUS";
+    sqlStatement += " from SCHEDULE, DATES, GAMETIME, FIELDS, STATUS, TEAMNAME, TEAMNAME AS TEAMS_1";
+    sqlStatement += " WHERE DATES.WEEK = SCHEDULE.WEEK";
+    sqlStatement += " AND GAMETIME.TIME_SLOT = SCHEDULE.TIME_SLOT";
+    sqlStatement += " AND FIELDS.FIELD = SCHEDULE.FIELD";
+    sqlStatement += " AND STATUS.STATUS = SCHEDULE.STATUS";
+    sqlStatement += " AND TEAMNAME.TEAM_NO = SCHEDULE.HOME";
+    sqlStatement += " AND TEAMS_1.TEAM_NO = SCHEDULE.VISITOR";
+
+    // Status filter
+    if (ddStatus.SelectedIndex > 0)
+    {
+        sqlStatement += " AND SCHEDULE.STATUS = '" + lbStatus.Items[ddStatus.SelectedIndex - 1] + "'";
+    }
+    // Field filter
+    if (ddField.SelectedIndex > 0)
+    {
+        sqlStatement += " AND SCHEDULE.FIELD = " + lbField.Items[ddField.SelectedIndex - 1];
+    }
+    // Team filter (either home or visitor)
+    if (ddTeam.SelectedIndex > 0)
+    {
+        sqlStatement += " AND (SCHEDULE.HOME = " + lbTeam.Items[ddTeam.SelectedIndex - 1] +
+                        " OR SCHEDULE.VISITOR = " + lbTeam.Items[ddTeam.SelectedIndex - 1] + ")";
+    }
+
+    sqlStatement += " ORDER BY SCHEDULE.WEEK";
+    myDatabaseConnection.executeSQL(sqlStatement, ref gvDisplay, ref lblErrorMessage);
+}
+```
+
+Then wire:
+
+```csharp
+protected void ddTeam_SelectedIndexChanged(object sender, EventArgs e)  => RequeryAndBind();
+protected void ddField_SelectedIndexChanged(object sender, EventArgs e) => RequeryAndBind();
+protected void ddStatus_SelectedIndexChanged(object sender, EventArgs e)=> RequeryAndBind();
+
+// If using a button instead of AutoPostBack:
+// protected void btnSubmit_Click(object sender, EventArgs e) => RequeryAndBind();
+```
+
+(Exact filter expressions and placement follow the assignment.) 
+
+5. **Implement `fillDropDownList` in `myDatabaseConnection.cs`**
+
+Add at top of file:
+
+```csharp
+using System.Data;
+using System.Data.SqlClient;
+```
+
+Method signature and body:
+
+```csharp
+public static void fillDropDownList(
+    DropDownList dropdownId,
+    ListBox listboxId,
+    string tableName,
+    string field,
+    string index,
+    ref Label lblErrorMessage)
+{
+    dropdownId.Items.Clear();
+    listboxId.Items.Clear();
+
+    dropdownId.Items.Add("*");
+
+    DataRow dr;
+    DataTable dt = new DataTable();
+    string sqlCommand = "SELECT " + field + ", " + index + " FROM " + tableName + " ORDER BY " + field;
+
+    try
+    {
+        myConnection.Open(); // assumes same connection object as in executeSQL
+    }
+    catch (Exception ex)
+    {
+        lblErrorMessage.Text = ex.ToString();
+    }
+
+    try
+    {
+        SqlDataAdapter da = new SqlDataAdapter(sqlCommand, myConnection);
+        da.Fill(dt);
+
+        for (int i = 0; i < dt.Rows.Count; i++)
+        {
+            dr = dt.Rows[i];
+            dropdownId.Items.Add(dr[field].ToString());
+            listboxId.Items.Add(dr[index].ToString());
+        }
+        dropdownId.SelectedIndex = 0;
+    }
+    catch (Exception ex)
+    {
+        lblErrorMessage.Text = ex.ToString();
+    }
+    finally
+    {
+        try { myConnection.Close(); } catch { /* ignore */ }
+    }
+}
+```
+
+(Structure and logic mirror the assignment’s walk-through.) 
 
 ---
 
-## 📄 License
+# SQL snippets (copied from the assignment)
 
-This is a university assignment project. Please follow your institution's academic integrity guidelines.
+* Base:
 
-## 🤝 Contributing
+```sql
+SELECT * FROM SCHEDULE;
+```
 
-This is an educational project. For improvements or questions, please consult with your instructor or teaching assistant.
+* Ordered minimal set:
+
+```sql
+SELECT Week, Time_Slot, Field, Home, Visitor, Status
+FROM SCHEDULE
+ORDER BY SCHEDULE.WEEK;
+```
+
+* Add dates:
+
+```sql
+SELECT DATES.PLAY_DATE, Time_Slot, Field, Home, Visitor, Status
+FROM SCHEDULE, DATES
+WHERE DATES.WEEK = SCHEDULE.WEEK
+ORDER BY SCHEDULE.WEEK;
+```
+
+* Add game time:
+
+```sql
+SELECT DATES.PLAY_DATE, GameTime.Game_Time, Field, Home, Visitor, Status
+FROM SCHEDULE, DATES, GameTime
+WHERE DATES.WEEK = SCHEDULE.WEEK
+  AND GameTime.TIME_SLOT = SCHEDULE.TIME_SLOT
+ORDER BY SCHEDULE.WEEK;
+```
+
+* Add field names:
+
+```sql
+SELECT DATES.PLAY_DATE, GAMETIME.GAME_TIME, FIELDS.FIELD_NAME, Home, Visitor, Status
+FROM SCHEDULE, DATES, GAMETIME, FIELDS
+WHERE DATES.WEEK = SCHEDULE.WEEK
+  AND GAMETIME.TIME_SLOT = SCHEDULE.TIME_SLOT
+  AND FIELDS.FIELD = SCHEDULE.FIELD
+ORDER BY SCHEDULE.WEEK;
+```
+
+* Add full status:
+
+```sql
+SELECT DATES.PLAY_DATE, GAMETIME.GAME_TIME, FIELDS.FIELD_NAME, Home, Visitor, STATUS.FULL_STATUS
+FROM SCHEDULE, DATES, GAMETIME, FIELDS, STATUS
+WHERE DATES.WEEK = SCHEDULE.WEEK
+  AND GAMETIME.TIME_SLOT = SCHEDULE.TIME_SLOT
+  AND FIELDS.FIELD = SCHEDULE.FIELD
+  AND STATUS.STATUS = SCHEDULE.STATUS;
+```
+
+* Add home team name:
+
+```sql
+SELECT DATES.PLAY_DATE, GAMETIME.GAME_TIME, FIELDS.FIELD_NAME,
+       TEAMNAME.TEAM_NAME, Visitor, STATUS.FULL_STATUS
+FROM SCHEDULE, DATES, GAMETIME, FIELDS, STATUS, TEAMNAME
+WHERE DATES.WEEK = SCHEDULE.WEEK
+  AND GAMETIME.TIME_SLOT = SCHEDULE.TIME_SLOT
+  AND FIELDS.FIELD = SCHEDULE.FIELD
+  AND STATUS.STATUS = SCHEDULE.STATUS
+  AND TEAMNAME.TEAM_NO = SCHEDULE.HOME
+ORDER BY SCHEDULE.WEEK;
+```
+
+* Add visitor team with alias:
+
+```sql
+SELECT DATES.PLAY_DATE, GAMETIME.GAME_TIME, FIELDS.FIELD_NAME,
+       TEAMNAME.TEAM_NAME, TEAMS_1.TEAM_NAME, STATUS.FULL_STATUS
+FROM SCHEDULE, DATES, GAMETIME, FIELDS, STATUS, TEAMNAME, TEAMNAME AS TEAMS_1
+WHERE DATES.WEEK = SCHEDULE.WEEK
+  AND GAMETIME.TIME_SLOT = SCHEDULE.TIME_SLOT
+  AND FIELDS.FIELD = SCHEDULE.FIELD
+  AND STATUS.STATUS = SCHEDULE.STATUS
+  AND TEAMNAME.TEAM_NO = SCHEDULE.HOME
+  AND TEAMS_1.TEAM_NO = SCHEDULE.VISITOR
+ORDER BY SCHEDULE.WEEK;
+```
+
+(All SQL pulled verbatim from the assignment.) 
+
+---
+
+# Turn-in checklist (from the brief)
+
+* Everything works with dropdown filters.
+* Add a soccer banner; label each dropdown (“Field”, “Team Name”, “Status”).
+* Remove `Response.Write` cruft and extra `using` statements.
+* Hide the 3 list boxes (`Visible="false"`).
+* Replace `App_Code/myDatabaseConnection.cs` on the server with your new one (keep a backup).
+* Homework 3 should still work unchanged. 
+
+If you want, I can package this into a `.md` quick-start with all snippets ready to paste into VS—just say the word.
