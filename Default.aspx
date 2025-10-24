@@ -4,152 +4,138 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>Hocus Pocus Set the Focus</title>
-    <style>
-        .container { margin: 20px; }
-        .section { margin: 15px 0; border: 1px solid #ccc; padding: 10px; }
-        .error { color: red; font-weight: bold; }
-        .success { color: green; font-weight: bold; }
-        .hidden { display: none; }
-        .welcome-banner { 
-            background-color: #f0f8ff; 
-            padding: 15px; 
-            border: 2px solid #4CAF50; 
-            margin-bottom: 20px;
-            font-size: 18px;
+    <title>Ashland Soccer</title>
+ <style>
+        body {
+   font-family: Arial, sans-serif;
+      margin: 0;
+            padding: 0;
+    background-color: #f5f5f5;
+        }
+        .container { 
+            max-width: 1200px;
+         margin: 20px auto;
+  padding: 20px;
+      background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+ }
+        .soccer-banner { 
+            background: linear-gradient(135deg, #1e7e34 0%, #4CAF50 100%);
+            color: white;
+     padding: 30px; 
+  text-align: center;
+     border-radius: 8px;
+      margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+.soccer-banner h1 {
+          margin: 0;
+         font-size: 2.5em;
+     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .soccer-banner p {
+            margin: 10px 0 0 0;
+     font-size: 1.2em;
+   opacity: 0.9;
+        }
+  .filter-section {
+   background-color: #f8f9fa;
+            padding: 20px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+        display: flex;
+            gap: 20px;
+            align-items: flex-end;
+   flex-wrap: wrap;
+        }
+        .filter-group {
+            display: flex;
+flex-direction: column;
+   min-width: 200px;
+        }
+        .filter-group label {
+         font-weight: bold;
+ margin-bottom: 5px;
+   color: #333;
+        }
+        .filter-group select {
+     padding: 8px;
+            border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+        }
+        .error { 
+color: red; 
+      font-weight: bold; 
+            padding: 10px;
+            background-color: #fee;
+            border-radius: 4px;
+         margin-bottom: 15px;
+  }
+      .gridview {
+   width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+     }
+     .gridview th {
+         background-color: #1e7e34;
+     color: white;
+   padding: 12px;
+            text-align: left;
             font-weight: bold;
-            text-align: center;
         }
-        .reset-section {
-            text-align: center;
-            margin: 20px 0;
-            padding: 15px;
-            background-color: #ffe4e1;
-            border: 1px solid #ff6b6b;
+        .gridview td {
+     padding: 10px;
+       border-bottom: 1px solid #ddd;
         }
+ .gridview tr:hover {
+            background-color: #f5f5f5;
+        }
+        .hidden {
+          display: none;
+ }
     </style>
 </head>
 <body>
     <form id="form1" runat="server">
     <div class="container">
         
-        <!-- Welcome Banner -->
-        <div class="welcome-banner">
-            <asp:Label ID="lblWelcomeBanner" runat="server" Text="Welcome to the University Database Management System!" />
+        <!-- Soccer Banner -->
+        <div class="soccer-banner">
+ <h1>? Ashland Soccer League ?</h1>
+          <p>Game Schedule & Results</p>
         </div>
+   
+        <!-- Error Message Display -->
+        <asp:Label ID="lblErrorMessage" runat="server" CssClass="error" Text="" Visible="false" />
+  
+        <!-- Filter Section -->
+    <div class="filter-section">
+  <div class="filter-group">
+          <label for="ddField">Field</label>
+              <asp:DropDownList ID="ddField" runat="server" AutoPostBack="true" />
+</div>
+     <div class="filter-group">
+             <label for="ddTeam">Team Name</label>
+            <asp:DropDownList ID="ddTeam" runat="server" AutoPostBack="true" />
+         </div>
+   <div class="filter-group">
+   <label for="ddStatus">Status</label>
+       <asp:DropDownList ID="ddStatus" runat="server" AutoPostBack="true" />
+   </div>
+   </div>
         
-        <!-- Reset Cookie Section -->
-        <div class="reset-section">
-            <asp:Button ID="btnReset" runat="server" Text="Reset Login" BackColor="#ff6b6b" ForeColor="White" />
-            <br />
-            <small>Click to logout and return to login page</small>
-        </div>
+        <!-- Hidden ListBoxes for Index Tracking (debugging - hidden from view) -->
+        <asp:ListBox ID="lbField" runat="server" CssClass="hidden" Visible="false" />
+        <asp:ListBox ID="lbTeam" runat="server" CssClass="hidden" Visible="false" />
+        <asp:ListBox ID="lbStatus" runat="server" CssClass="hidden" Visible="false" />
         
-        <h2>ITWP 2300 Homework 4 - Data Validation, Cookies, and Page Redirection</h2>
-        
-        <!-- Error/Success Message Display -->
-        <asp:Label ID="lblErrorMessage" runat="server" CssClass="error" EnableViewState="false" Text="" />
-        <br />
-        
-        <!-- Database Title Label for Extra Credit -->
-        <asp:Label ID="lblTableName" runat="server" Text="" Font-Bold="true" />
-        <br />
-        
-        <!-- GridView for displaying query results -->
-        <asp:GridView ID="gvDisplay" runat="server" Visible="false" 
-                      CssClass="gridview" AutoGenerateColumns="true" 
-                      HeaderStyle-BackColor="#507CD1" HeaderStyle-ForeColor="White" />
-        <hr />
-        
-        <div class="section">
-            <h3>Course Operations</h3>
-            <asp:Button ID="btnCreateCourse" runat="server" Text="Create Course" OnClick="btnCreateCourse_Click" />
-            <asp:Button ID="btnLoadCourse" runat="server" Text="Load Course" OnClick="btnLoadCourse_Click" />
-            <asp:Button ID="btnViewCourse" runat="server" Text="View Course" OnClick="btnViewCourse_Click" />
-            <asp:Button ID="btnDeleteCourse" runat="server" Text="Delete Course" OnClick="btnDeleteCourse_Click" />
-            <br />
-            <asp:ListBox ID="lstCourse" runat="server" Width="400px" Height="100px" Visible="false"></asp:ListBox>
-        </div>
-        
-        <div class="section">
-            <h3>Student Operations</h3>
-            <asp:Button ID="btnCreateStudent" runat="server" Text="Create Student" OnClick="btnCreateStudent_Click" />
-            <asp:Button ID="btnLoadStudent" runat="server" Text="Load Student" OnClick="btnLoadStudent_Click" />
-            <asp:Button ID="btnViewStudent" runat="server" Text="View Student" OnClick="btnViewStudent_Click" />
-            <asp:Button ID="btnDeleteStudent" runat="server" Text="Delete Student" OnClick="btnDeleteStudent_Click" />
-            <br />
-            <asp:ListBox ID="lstStudent" runat="server" Width="400px" Height="100px" Visible="false"></asp:ListBox>
-        </div>
-        
-        <div class="section">
-            <h3>Faculty Operations</h3>
-            <asp:Button ID="btnCreateFaculty" runat="server" Text="Create Faculty" OnClick="btnCreateFaculty_Click" />
-            <asp:Button ID="btnLoadFaculty" runat="server" Text="Load Faculty" OnClick="btnLoadFaculty_Click" />
-            <asp:Button ID="btnViewFaculty" runat="server" Text="View Faculty" OnClick="btnViewFaculty_Click" />
-            <asp:Button ID="btnDeleteFaculty" runat="server" Text="Delete Faculty" OnClick="btnDeleteFaculty_Click" />
-            <br />
-            <asp:ListBox ID="lstFaculty" runat="server" Width="400px" Height="100px" Visible="false"></asp:ListBox>
-        </div>
-        
-        <div class="section">
-            <h3>Location Operations</h3>
-            <asp:Button ID="btnCreateLocation" runat="server" Text="Create Location" OnClick="btnCreateLocation_Click" />
-            <asp:Button ID="btnLoadLocation" runat="server" Text="Load Location" OnClick="btnLoadLocation_Click" />
-            <asp:Button ID="btnViewLocation" runat="server" Text="View Location" OnClick="btnViewLocation_Click" />
-            <asp:Button ID="btnDeleteLocation" runat="server" Text="Delete Location" OnClick="btnDeleteLocation_Click" />
-            <br />
-            <asp:ListBox ID="lstLocation" runat="server" Width="400px" Height="100px" Visible="false"></asp:ListBox>
-        </div>
-        
-        <div class="section">
-            <h3>Frank Operations</h3>
-            <asp:Button ID="btnCreateFrank" runat="server" Text="Create Frank" OnClick="btnCreateFrank_Click" />
-            <asp:Button ID="btnLoadFrank" runat="server" Text="Load Frank" OnClick="btnLoadFrank_Click" />
-            <asp:Button ID="btnViewFrank" runat="server" Text="View Frank" OnClick="btnViewFrank_Click" />
-            <asp:Button ID="btnDeleteFrank" runat="server" Text="Delete Frank" OnClick="btnDeleteFrank_Click" />
-            <br />
-            <asp:ListBox ID="lstFrank" runat="server" Width="400px" Height="100px" Visible="false"></asp:ListBox>
-        </div>
-
-        <div class="section">
-            <h3>Term Operations</h3>
-            <asp:Button ID="btnCreateTerm" runat="server" Text="Create Term" OnClick="btnCreateTerm_Click" />
-            <asp:Button ID="btnLoadTerm" runat="server" Text="Load Term" OnClick="btnLoadTerm_Click" />
-            <asp:Button ID="btnViewTerm" runat="server" Text="View Term" OnClick="btnViewTerm_Click" />
-            <asp:Button ID="btnDeleteTerm" runat="server" Text="Delete Term" OnClick="btnDeleteTerm_Click" />
-            <br />
-            <asp:ListBox ID="lstTerm" runat="server" Width="400px" Height="100px" Visible="false"></asp:ListBox>
-        </div>
-        
-        <div class="section">
-            <h3>Course Section Operations</h3>
-            <asp:Button ID="btnCreateCourse_Section" runat="server" Text="Create Course Section" OnClick="btnCreateCourse_Section_Click" />
-            <asp:Button ID="btnLoadCourse_Section" runat="server" Text="Load Course Section" OnClick="btnLoadCourse_Section_Click" />
-            <asp:Button ID="btnViewCourse_Section" runat="server" Text="View Course Section" OnClick="btnViewCourse_Section_Click" />
-            <asp:Button ID="btnDeleteCourse_Section" runat="server" Text="Delete Course Section" OnClick="btnDeleteCourse_Section_Click" />
-            <br />
-            <asp:ListBox ID="lstCourse_Section" runat="server" Width="400px" Height="100px" Visible="false"></asp:ListBox>
-        </div>
-        
-        <div class="section">
-            <h3>Enrollment Operations</h3>
-            <asp:Button ID="btnCreateEnrollment" runat="server" Text="Create Enrollment" OnClick="btnCreateEnrollment_Click" />
-            <asp:Button ID="btnLoadEnrollment" runat="server" Text="Load Enrollment" OnClick="btnLoadEnrollment_Click" />
-            <asp:Button ID="btnViewEnrollment" runat="server" Text="View Enrollment" OnClick="btnViewEnrollment_Click" />
-            <asp:Button ID="btnDeleteEnrollment" runat="server" Text="Delete Enrollment" OnClick="btnDeleteEnrollment_Click" />
-            <br />
-            <asp:ListBox ID="lstEnrollment" runat="server" Width="400px" Height="100px" Visible="false"></asp:ListBox>
-        </div>
-        
-        <div class="section">
-            <h3>State Operations</h3>
-            <asp:Button ID="btnCreateState" runat="server" Text="Create State" OnClick="btnCreateState_Click" />
-            <asp:Button ID="btnLoadState" runat="server" Text="Load State" OnClick="btnLoadState_Click" />
-            <asp:Button ID="btnViewState" runat="server" Text="View State" OnClick="btnViewState_Click" />
-            <asp:Button ID="btnDeleteState" runat="server" Text="Delete State" OnClick="btnDeleteState_Click" />
-            <br />
-            <asp:ListBox ID="lstState" runat="server" Width="400px" Height="100px" Visible="false"></asp:ListBox>
-        </div>
+        <!-- GridView for displaying schedule -->
+        <asp:GridView ID="gvDisplay" runat="server" 
+ CssClass="gridview" 
+       AutoGenerateColumns="true" 
+              HeaderStyle-BackColor="#1e7e34" 
+HeaderStyle-ForeColor="White" />
         
     </div>
     </form>
